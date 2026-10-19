@@ -11,7 +11,7 @@ To make sure all matrix multiplications work without shape errors, the code trac
 * **B (Batch Size):** Number of text sequences processed at the same time (32)
 * **S (Seq Len):** Maximum context window length (64)
 * **E (Embed Dim):** Size of the embedding vector for each token (128)
-* **H (Head Dim):** Size of each attention head ($H = E / \text{num\_heads} = 128 / 8 = 16$)
+* **H (Head Dim):** Size of each attention head
 
 ```text
 Input Indices (B, S) 
