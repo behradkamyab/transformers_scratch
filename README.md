@@ -8,11 +8,10 @@ Using high-level libraries like Hugging Face makes it easy to run models in a fe
 
 To make sure all matrix multiplications work without shape errors, the code tracks five main dimensions during the forward pass:
 
-* $B$ **(`Batch_Size`):** Number of text sequences processed at the same time (`32`)
-* $S$ **(`Seq_Len`):** Maximum context window length (`64`)
-* $E$ **(`Embed_Dim`):** Size of the embedding vector for each token (`128`)
-* $H$ **(`Head_Dim`):** Size of each attention head ($H = E / \text{num\_heads} = 128 / 8 = 16$)
-* $V$ **(`Vocab_Size`):** Total unique words in the vocabulary (`10,000`)
+* **B (Batch Size):** Number of text sequences processed at the same time (32)
+* **S (Seq Len):** Maximum context window length (64)
+* **E (Embed Dim):** Size of the embedding vector for each token (128)
+* **H (Head Dim):** Size of each attention head ($H = E / \text{num\_heads} = 128 / 8 = 16$)
 
 ```text
 Input Indices (B, S) 
@@ -73,7 +72,7 @@ The final 3.37M parameter model was trained using the following configuration in
 ### 3. The Transformer Model (`src/model/attention.py` & `src/model/gpt.py`)
 * **Scaled Dot-Product Attention:** Implemented $\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}} + M\right)V$. A lower-triangular mask ($M$) fills future token positions with $-\infty$ before the softmax step so the model cannot cheat by looking ahead.
 * **Multi-Head Attention:** Runs 8 attention heads (`head_size = 16`) in parallel using `nn.ModuleList`. This lets different heads focus on different parts of the sentence (like punctuation, grammar, or nearby nouns) before combining their outputs back to `embed_dim = 128`.
-* **Pre-Norm Residual Connections:** Applies `LayerNorm` *before* the Attention and FeedForward layers ($x + f(\text{LN}(x))$), following modern designs like GPT-2 and Llama for much more stable training.
+* **Pre-Norm Residual Connections:** Applies `LayerNorm` *before* the Attention and FeedForward layers, following modern designs like GPT-2 and Llama for much more stable training.
 
 ### 4. Training Pipeline and Testing (`scripts/train.py` & `tests/test_model.py`)
 * **Warmup and Cosine Learning Rate Decay:** Training Transformers with a high learning rate right away can cause unstable gradients. I added a `LambdaLR` scheduler that slowly increases the learning rate from `0.0` to `3e-4` over the first 100 steps, and then lowers it using a cosine curve down to `3e-5`.
@@ -84,7 +83,7 @@ The final 3.37M parameter model was trained using the following configuration in
 Picking random words straight from the raw output probabilities often produces bad text. I added three controls to improve generation:
 * **`<UNK>` Masking:** Because `<UNK>` appears often in the training data, the model tries to generate it all the time. During inference, index `0` is set to $-\infty$ so the model is forced to pick real words.
 * **Temperature Scaling:** Divides logits by a temperature value ($T = 0.8$) before softmax to make confident words even more likely.
-* **Top-$K$ Sampling:** Limits the model to choosing only from the top $K = 10$ most likely words at each step, cutting off rare and random words.
+* **Top-K Sampling:** Limits the model to choosing only from the top $K = 10$ most likely words at each step, cutting off rare and random words.
 
 ## Experimental Results
 
