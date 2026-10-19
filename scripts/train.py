@@ -16,7 +16,7 @@ max_vocab_size = 10000
 
 # Transformer Architecture Configuration
 embed_dim = 128        # Dimensionality of the token embeddings
-num_heads = 8         # Number of attention heads (head_size = 64/8 = 8)
+num_heads = 8         # Number of attention heads (head_size = 128 / 8 = 16)
 num_blocks = 4        # Number of sequential Transformer blocks
 dropout = 0.2
 
