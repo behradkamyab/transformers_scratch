@@ -1,0 +1,25 @@
+cat << 'EOF' > .gitignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Data & Model Weights
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+checkpoints/
+*.pt
+*.pth
+
+# IDEs
+.vscode/
+.idea/
+EOF
+
+
+touch data/raw/.gitkeep data/processed/.gitkeep

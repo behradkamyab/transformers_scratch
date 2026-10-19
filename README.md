@@ -1,0 +1,1 @@
+Baseline Bigram Model achieved a Validation Loss of 9.02. To capture long-range dependencies and syntactic structure, a multi-head causal attention architecture was implemented.
